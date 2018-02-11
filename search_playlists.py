@@ -38,14 +38,19 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 playlists = sp.user_playlists(username)
 list_of_tracks = []
 for playlist in playlists['items']:
-    playlist_name = playlist['name']
-    if is_monthly_playlist(playlist_name):
+    if is_monthly_playlist(playlist['name']):
         playlist = sp.user_playlist(username, playlist['id'])
         # print_playlist_tracks(playlist)
-        track_names = {item['track']['name'] for item in playlist['tracks']['items']
-                                              if item['track']}
+        track_names = {item['track']['name'] for item in playlist['tracks']['items'] if item['track']}
         list_of_tracks.extend(track_names)
-# print("List of tracks length:", len(list_of_tracks))
+
 duplicate_tracks = [track for track, count in collections.Counter(list_of_tracks).items() if count > 1]
 print("Duplicate tracks:", duplicate_tracks)
 
+for track in duplicate_tracks:
+    for playlist in playlists['items']:
+        if is_monthly_playlist(playlist['name']):
+            playlist = sp.user_playlist(username, playlist['id'])
+            track_names = {item['track']['name'] for item in playlist['tracks']['items'] if item['track']}
+            if track in track_names:
+              print(track, "is in", playlist['name'])
