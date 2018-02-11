@@ -1,21 +1,13 @@
 import sys
 import json
 import collections
+import calendar
 
 from functools import reduce
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-
-playlists_to_ignore = ["Bass-ic Bitches",
-                       "SoBo's Loco Mojo",
-                       "Hotline Miami Mix",
-                       "Discover Weekly",
-                       "My Shazam Tracks",
-                       "Daily Mix 3 - MADE FOR NATHANWM:11/21/17"]
-
-seasonal_playlist_names = ["Spring", "Summer", "Fall", "Winter"]
 
 def print_usage():
     print("usage: python search_playlists.py username")
@@ -31,17 +23,7 @@ def print_playlist_tracks(playlist):
     print('')
 
 def is_monthly_playlist(playlist_name):
-    if playlist_name in playlists_to_ignore:
-        return False
-
-    if 'Year of' in playlist_name:
-        return False
-
-    is_seasonal_playlist = list(filter(lambda x: x in playlist_name, seasonal_playlist_names))
-    if is_seasonal_playlist:
-      return False
-    
-    return True
+    return playlist_name.split()[0] in calendar.month_name
 
 if len(sys.argv) > 1:
     username = sys.argv[1]
