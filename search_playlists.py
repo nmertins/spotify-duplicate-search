@@ -25,12 +25,7 @@ def print_playlist_tracks(playlist):
 def is_monthly_playlist(playlist_name):
     return playlist_name.split()[0] in calendar.month_name
 
-if len(sys.argv) > 1:
-    username = sys.argv[1]
-else:
-    print("Too many arguments")
-    print_usage()
-    sys.exit()
+username = 'nathanwm'
 
 client_credentials_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
