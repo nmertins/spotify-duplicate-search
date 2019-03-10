@@ -30,15 +30,18 @@ client_credentials_manager = SpotifyClientCredentials()
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 playlists = sp.user_playlists(username)
-list_of_tracks = []
+tracks_dict = {}
 for playlist in playlists['items']:
     if is_monthly_playlist(playlist['name']):
         playlist = sp.user_playlist(username, playlist['id'])
-        # print_playlist_tracks(playlist)
-        track_names = {item['track']['name'] for item in playlist['tracks']['items'] if item['track']}
-        list_of_tracks.extend(track_names)
+        for track_item in playlist['tracks']['items']:
+            if track_item['track']:
+                track_name = track_item['track']['name']
+                if track_name not in tracks_dict.keys():
+                    tracks_dict[track_name] = []
+                tracks_dict[track_name].append(track_item['track']['artists'][0]['name'])
 
-duplicate_tracks = [track for track, count in collections.Counter(list_of_tracks).items() if count > 1]
+duplicate_tracks = [track for track in tracks_dict.keys() if len(tracks_dict[track]) > 1]
 print("Duplicate tracks:", duplicate_tracks)
 
 for track in duplicate_tracks:
@@ -47,4 +50,4 @@ for track in duplicate_tracks:
             playlist = sp.user_playlist(username, playlist['id'])
             track_names = {item['track']['name'] for item in playlist['tracks']['items'] if item['track']}
             if track in track_names:
-              print(track, "is in", playlist['name'])
+                print(track, "is in", playlist['name'])
