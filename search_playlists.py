@@ -1,9 +1,5 @@
-import sys
-import json
-import collections
 import calendar
-
-from functools import reduce
+import collections
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -11,6 +7,7 @@ from spotipy.oauth2 import SpotifyClientCredentials
 
 def print_usage():
     print("usage: python search_playlists.py username")
+
 
 def print_playlist_tracks(playlist):
     print(playlist['name'])
@@ -22,8 +19,10 @@ def print_playlist_tracks(playlist):
             print(track['name'])
     print('')
 
+
 def is_monthly_playlist(playlist_name):
     return playlist_name.split()[0] in calendar.month_name
+
 
 username = 'nathanwm'
 
