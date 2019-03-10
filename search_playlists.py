@@ -1,5 +1,5 @@
 import calendar
-import collections
+from collections import Counter
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -41,7 +41,14 @@ for playlist in playlists['items']:
                     tracks_dict[track_name] = []
                 tracks_dict[track_name].append(track_item['track']['artists'][0]['name'])
 
-duplicate_tracks = [track for track in tracks_dict.keys() if len(tracks_dict[track]) > 1]
+potential_duplicate_tracks = [track for track in tracks_dict.keys() if len(tracks_dict[track]) > 1]
+duplicate_tracks = []
+for track in potential_duplicate_tracks:
+    artist_counter = Counter(tracks_dict[track])
+    for artist, count in artist_counter.items():
+        if count > 1:
+            duplicate_tracks.append(track)
+
 print("Duplicate tracks:", duplicate_tracks)
 
 for track in duplicate_tracks:
